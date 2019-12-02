@@ -50,6 +50,8 @@ private slots:
 
     void on_recBtn_pressed();
 
+    void on_detectBtn_pressed();
+
 private:
     Ui::MainWindow *ui;
 
@@ -58,6 +60,7 @@ private:
     QGraphicsPixmapItem pixmap3;
     QGraphicsPixmapItem pixmap4;
     QGraphicsPixmapItem pixmapRGB;
+    QGraphicsPixmapItem pixmapDET;
     cv::VideoCapture video;
 
 };

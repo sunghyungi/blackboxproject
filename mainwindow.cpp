@@ -24,7 +24,11 @@ MainWindow::MainWindow(QWidget *parent)
 
     ui->graphicsView_2->setScene(new QGraphicsScene(this));
     ui->graphicsView_2->scene()->addItem(&pixmapRGB);
+
+    ui->graphicsView_3->setScene(new QGraphicsScene(this));
+    ui->graphicsView_3->scene()->addItem(&pixmapDET);
 }
+
 
 
 MainWindow::~MainWindow()
@@ -74,7 +78,6 @@ void  calc_Histo(const Mat& image, Mat& hist, int bins, int range_max = 256)
     int		histSize[] = { bins };			// 히스토그램 계급개수
     float   range[] = { 0, (float)range_max };		// 히스토그램 범위
     int		channels[] = { 0 };				// 채널 목록
-    int		dims = image.channels();
     const float* ranges[] = { range };
 
     calcHist(&image, 1, channels, Mat(), hist, 1, histSize, ranges);
@@ -251,9 +254,6 @@ void MainWindow::on_startBtn_pressed()
                     writer << frame1;
                     waitKey(delay);
 
-
-
-
                 }
 
             }
@@ -309,6 +309,43 @@ void MainWindow::on_startBtn_pressed()
 
             // -------------------------------------------------------------------------------------- TAB2
 
+
+
+            // TAB3 Detecting
+            // -------------------------------------------------------------------------------------- TAB3
+            if(ui->tabWidget->currentIndex()==2){
+                Mat frame3;
+                frame3 = frame1;
+
+                if (ui->detectBtn->text() == "STOP"){
+                    CascadeClassifier classifier("../~detectxml/cascade2.xml");
+
+                    vector<Rect> faces;
+                    classifier.detectMultiScale(frame3, faces);
+
+                    for (Rect rc: faces){
+                        rectangle(frame3, rc, Scalar(255, 0, 255),2);
+                    }
+                }
+
+
+                QImage qimgDetect(frame3.data,
+                          frame3.cols,
+                          frame3.rows,
+                          frame3.step,
+                          QImage::Format_RGB888);
+
+                pixmapDET.setPixmap( QPixmap::fromImage(qimgDetect));
+                ui->graphicsView_3->fitInView(&pixmapDET, Qt::KeepAspectRatio);
+
+                red_hist = histg(frame3, 1);
+                green_hist = histg(frame3, 2);
+                blue_hist = histg(frame3, 3);
+
+            }
+
+
+            // -------------------------------------------------------------------------------------- TAB3
 
 
             // histogram draw
@@ -431,5 +468,16 @@ void MainWindow::on_recBtn_pressed()
     }
     else{
         ui->recBtn->setText("REC");
+    }
+}
+
+void MainWindow::on_detectBtn_pressed()
+{
+    if(ui->detectBtn->text()=="Detecting")
+    {
+        ui->detectBtn->setText("STOP");
+    }
+    else{
+        ui->detectBtn->setText("Detecting");
     }
 }

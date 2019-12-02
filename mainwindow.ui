@@ -36,6 +36,9 @@
       <height>25</height>
      </rect>
     </property>
+    <property name="text">
+     <string>0</string>
+    </property>
    </widget>
    <widget class="QPushButton" name="startBtn">
     <property name="geometry">
@@ -60,7 +63,7 @@
      </rect>
     </property>
     <property name="currentIndex">
-     <number>1</number>
+     <number>2</number>
     </property>
     <widget class="QWidget" name="Video">
      <attribute name="title">
@@ -301,7 +304,7 @@
      <attribute name="title">
       <string>Detecting</string>
      </attribute>
-     <widget class="QGraphicsView" name="graphicsView_5">
+     <widget class="QGraphicsView" name="graphicsView_3">
       <property name="geometry">
        <rect>
         <x>20</x>
@@ -311,7 +314,7 @@
        </rect>
       </property>
      </widget>
-     <widget class="QPushButton" name="pushButton">
+     <widget class="QPushButton" name="detectBtn">
       <property name="geometry">
        <rect>
         <x>500</x>
