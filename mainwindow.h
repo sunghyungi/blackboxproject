@@ -52,6 +52,8 @@ private slots:
 
     void on_detectBtn_pressed();
 
+    void on_chabtn_pressed();
+
 private:
     Ui::MainWindow *ui;
 

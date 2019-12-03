@@ -269,24 +269,60 @@ void MainWindow::on_startBtn_pressed()
                 Mat frame2, ch_012;
                 Mat zeros(bgr[0].size(),CV_8UC1,int(0));
 
+                bool redbool = ui->RedCheck->checkState();
+                bool greenbool = ui->GreenCheck->checkState();
+                bool bluebool = ui->BlueCheck->checkState();
 
 
-                if(!ui->RedCheck->checkState()){
-                    bgr[0] = zeros;
+                // 3채널
+                if(ui->chabtn->text() == "1channel")
+                {
+                    if(!redbool){
+                        bgr[0] = zeros;
+                    }
+                    if(!greenbool){
+                        bgr[1] = zeros;
+                    }
+                    if(!bluebool){
+                        bgr[2] = zeros;
+                    }
+
+                    vector<Mat> vec_012;
+                    vec_012.push_back(bgr[0]);
+                    vec_012.push_back(bgr[1]);
+                    vec_012.push_back(bgr[2]);
+                    merge(vec_012, ch_012);
+                    frame2 = ch_012;
                 }
-                if(!ui->GreenCheck->checkState()){
-                    bgr[1] = zeros;
-                }
-                if(!ui->BlueCheck->checkState()){
-                    bgr[2] = zeros;
+                else{       // 1채널
+                    Mat chamat;
+
+
+                    if(redbool && greenbool && bluebool){
+                        chamat = (bgr[0]+bgr[1]+bgr[2])/3;
+                    }
+                    else if(redbool && greenbool){
+                        chamat = (bgr[0]+bgr[1])/2;
+                    }
+                    else if(redbool && bluebool){
+                        chamat = (bgr[0]+bgr[2])/2;
+                    }
+                    else if(greenbool && bluebool){
+                        chamat = (bgr[1]+bgr[2])/2;
+                    }
+                    else if(redbool){
+                        chamat = bgr[0];
+                    }
+                    else if(greenbool){
+                        chamat = bgr[1];
+                    }
+                    else if(bluebool){
+                        chamat = bgr[2];
+                    }
+
+                    cvtColor(chamat, frame2, COLOR_GRAY2RGB);
                 }
 
-                vector<Mat> vec_012;
-                vec_012.push_back(bgr[0]);
-                vec_012.push_back(bgr[1]);
-                vec_012.push_back(bgr[2]);
-                merge(vec_012, ch_012);
-                frame2 = ch_012;
 
 
 
@@ -298,6 +334,12 @@ void MainWindow::on_startBtn_pressed()
 
                 pixmapRGB.setPixmap( QPixmap::fromImage(qimgRGB));
                 ui->graphicsView_2->fitInView(&pixmapRGB, Qt::KeepAspectRatio);
+
+
+
+
+
+
 
 
                 // 히스토그램
@@ -314,33 +356,43 @@ void MainWindow::on_startBtn_pressed()
             // TAB3 Detecting
             // -------------------------------------------------------------------------------------- TAB3
             if(ui->tabWidget->currentIndex()==2){
-                Mat frame3;
-                frame3 = frame1;
+//                Mat frame3;
+//                frame3 = frame1;
 
                 if (ui->detectBtn->text() == "STOP"){
                     CascadeClassifier classifier("../~detectxml/cascade2.xml");
 
-                    vector<Rect> faces;
-                    classifier.detectMultiScale(frame3, faces);
+                    vector<Rect> car;
+                    classifier.detectMultiScale(frame1, car);
 
-                    for (Rect rc: faces){
-                        rectangle(frame3, rc, Scalar(255, 0, 255),2);
+                    for (Rect rc: car){
+                        rectangle(frame1, rc, Scalar(255, 0, 255),2);
                     }
+
+                    CascadeClassifier classifier2("../~detectxml/upperbody.xml");
+
+                    vector<Rect> body;
+                    classifier2.detectMultiScale(frame1, body);
+
+                    for (Rect rc: body){
+                        rectangle(frame1, rc, Scalar(255, 0, 0),2);
+                    }
+
                 }
 
 
-                QImage qimgDetect(frame3.data,
-                          frame3.cols,
-                          frame3.rows,
-                          frame3.step,
+                QImage qimgDetect(frame1.data,
+                          frame1.cols,
+                          frame1.rows,
+                          frame1.step,
                           QImage::Format_RGB888);
 
                 pixmapDET.setPixmap( QPixmap::fromImage(qimgDetect));
                 ui->graphicsView_3->fitInView(&pixmapDET, Qt::KeepAspectRatio);
 
-                red_hist = histg(frame3, 1);
-                green_hist = histg(frame3, 2);
-                blue_hist = histg(frame3, 3);
+                red_hist = histg(frame1, 1);
+                green_hist = histg(frame1, 2);
+                blue_hist = histg(frame1, 3);
 
             }
 
@@ -479,5 +531,16 @@ void MainWindow::on_detectBtn_pressed()
     }
     else{
         ui->detectBtn->setText("Detecting");
+    }
+}
+
+void MainWindow::on_chabtn_pressed()
+{
+    if(ui->chabtn->text() == "1channel")
+    {
+        ui->chabtn->setText("3channel");
+    }
+    else{
+        ui->chabtn->setText("1channel");
     }
 }
