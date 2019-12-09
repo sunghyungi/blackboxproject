@@ -19,14 +19,25 @@ DEFINES += QT_DEPRECATED_WARNINGS
 #DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs deprecated before Qt 6.0.0
 
 INCLUDEPATH += /usr/local/include/opencv4
-LIBS += -L/usr/local/lib -lopencv_core -lopencv_imgcodecs -lopencv_highgui -lopencv_videoio -lopencv_imgproc -lopencv_objdetect
+LIBS += -L/usr/local/lib -lopencv_core -lopencv_imgcodecs -lopencv_highgui -lopencv_videoio -lopencv_imgproc -lopencv_objdetect -L/usr/lib64 -L/usr/lib -L/usr/arm-linux-gnueabi/lib -lwiringPi
 
 SOURCES += \
+    buttonfunc.cpp \
+    colorchange.cpp \
+    detecting.cpp \
+    histogram.cpp \
+    linesearch.cpp \
     main.cpp \
-    mainwindow.cpp
+    mainwindow.cpp \
+    rec.cpp
 
 HEADERS += \
-    mainwindow.h
+    colorchange.h \
+    detecting.h \
+    histogram.h \
+    linesearch.h \
+    mainwindow.h \
+    rec.h
 
 FORMS += \
     mainwindow.ui
@@ -35,3 +46,6 @@ FORMS += \
 qnx: target.path = /tmp/$${TARGET}/bin
 else: unix:!android: target.path = /opt/$${TARGET}/bin
 !isEmpty(target.path): INSTALLS += target
+
+RESOURCES += \
+    ui_img.qrc
