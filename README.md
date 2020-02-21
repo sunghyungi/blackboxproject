@@ -19,4 +19,4 @@
 <img src="/image/tab4.png" width="550px" height="300px" alt="Light"></img><br/>
 
 ### Led
-<img src="/image/led.png" width="550px" height="300px" alt="Led"></img><br/>
+<img src="/image/led.jpg" width="550px" height="300px" alt="Led"></img><br/>
